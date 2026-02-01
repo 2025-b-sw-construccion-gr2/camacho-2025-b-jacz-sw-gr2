@@ -140,4 +140,80 @@ describe('PasswordGenerator', () => {
       expect(time).toContain('años');
     });
   });
+
+  describe('History Management', () => {
+    test('debería guardar contraseñas en el historial', () => {
+      generator.generate(12);
+      generator.generate(16);
+
+      const history = generator.getHistory();
+      expect(history.length).toBe(2);
+    });
+
+    test('debería limitar el historial a maxHistorySize', () => {
+      generator.maxHistorySize = 5;
+
+      for (let i = 0; i < 10; i++) {
+        generator.generate(10);
+      }
+
+      const history = generator.getHistory(100);
+      expect(history.length).toBe(5);
+    });
+
+    test('debería incluir metadata en las entradas del historial', () => {
+      generator.generate(12);
+      const history = generator.getHistory();
+
+      expect(history[0]).toHaveProperty('password');
+      expect(history[0]).toHaveProperty('timestamp');
+      expect(history[0]).toHaveProperty('length');
+      expect(history[0]).toHaveProperty('strength');
+    });
+
+    test('debería limpiar el historial correctamente', () => {
+      generator.generate(12);
+      generator.generate(16);
+      generator.clearHistory();
+
+      const history = generator.getHistory();
+      expect(history.length).toBe(0);
+    });
+
+    test('debería calcular estadísticas del historial', () => {
+      generator.clearHistory();
+      generator.generate(16, { includeSymbols: true });
+      generator.generate(8, { includeSymbols: false });
+
+      const stats = generator.getHistoryStats();
+      expect(stats.total).toBe(2);
+      expect(stats.averageLength).toBeGreaterThan(0);
+    });
+
+    test('debería buscar en el historial por longitud mínima', () => {
+      generator.clearHistory();
+      generator.generate(8);
+      generator.generate(16);
+      generator.generate(20);
+
+      const results = generator.searchHistory({ minLength: 15 });
+      expect(results.length).toBe(2);
+    });
+
+    test('debería buscar en el historial por fortaleza', () => {
+      generator.clearHistory();
+      generator.generate(16);
+
+      const results = generator.searchHistory({ strength: 'Fuerte' });
+      expect(results.length).toBeGreaterThan(0);
+    });
+
+    test('debería devolver estadísticas vacías con historial vacío', () => {
+      generator.clearHistory();
+      const stats = generator.getHistoryStats();
+
+      expect(stats.total).toBe(0);
+      expect(stats.averageLength).toBe(0);
+    });
+  });
 });
