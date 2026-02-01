@@ -128,4 +128,16 @@ describe('PasswordGenerator', () => {
       );
     });
   });
+
+  describe('calculateCrackTime', () => {
+    test('debería calcular tiempo de crackeo para contraseña corta', () => {
+      const time = generator.calculateCrackTime('abc');
+      expect(time).toContain('segundos');
+    });
+
+    test('debería calcular tiempo de crackeo para contraseña larga', () => {
+      const time = generator.calculateCrackTime('aB3$xY9!mK2@pL7*qR5&');
+      expect(time).toContain('años');
+    });
+  });
 });
