@@ -199,6 +199,10 @@ El pipeline se ejecuta automáticamente en cada `push` y `pull request` a las ra
 - ✅ Tests de manejo de errores
 - ✅ Tests de opciones personalizadas
 
+### Pipeline de CI/CD funcionando correctamente
+
+![img.png](docs/img_11.png)
+
 ## 👥 Contribución
 
 ### Cómo Contribuir
