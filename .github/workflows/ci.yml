@@ -10,6 +10,10 @@ jobs:
   lint:
     name: 🔍 Lint Code (ESLint)
     runs-on: ubuntu-latest
+    # Le decimos a este trabajo que todos sus comandos "run" se ejecuten en esta carpeta
+    defaults:
+      run:
+        working-directory: ./Examen_002/GENERADOR_CLAVES
 
     steps:
       - name: Checkout code
@@ -20,6 +24,8 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+          # Importante: Le decimos dónde está el lock file para el caché
+          cache-dependency-path: ./Examen_002/GENERADOR_CLAVES/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -31,6 +37,9 @@ jobs:
   format:
     name: ✨ Format Check (Prettier)
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Examen_002/GENERADOR_CLAVES
 
     steps:
       - name: Checkout code
@@ -41,6 +50,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+          cache-dependency-path: ./Examen_002/GENERADOR_CLAVES/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -52,6 +62,9 @@ jobs:
   test:
     name: ✅ Run Tests (Jest)
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./Examen_002/GENERADOR_CLAVES
 
     steps:
       - name: Checkout code
@@ -62,6 +75,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+          cache-dependency-path: ./Examen_002/GENERADOR_CLAVES/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -72,7 +86,8 @@ jobs:
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
         with:
-          files: ./coverage/lcov.info
+          # Ajustamos la ruta para encontrar el reporte dentro de la subcarpeta
+          files: ./Examen_002/GENERADOR_CLAVES/coverage/lcov.info
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
@@ -81,13 +96,17 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: coverage/
+          # Ajustamos la ruta para subir la carpeta correcta
+          path: Examen_002/GENERADOR_CLAVES/coverage/
           retention-days: 30
 
   build:
     name: 📦 Build Project
     runs-on: ubuntu-latest
     needs: [lint, format, test]
+    defaults:
+      run:
+        working-directory: ./Examen_002/GENERADOR_CLAVES
 
     steps:
       - name: Checkout code
@@ -98,6 +117,7 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+          cache-dependency-path: ./Examen_002/GENERADOR_CLAVES/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -105,7 +125,9 @@ jobs:
       - name: Verify project structure
         run: |
           echo "Verifying project can start..."
-          timeout 5 npm start || echo "Project verified (timeout expected)"
+          # El timeout a veces falla en CI si el start no retorna,
+          # asegúrate de que tu script start no se quede colgado eternamente o usa build
+          timeout 10 npm start || echo "Project verified (timeout expected)"
 
       - name: Create build artifacts
         run: |
@@ -117,7 +139,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: build/
+          # Ruta ajustada
+          path: Examen_002/GENERADOR_CLAVES/build/
           retention-days: 30
 
       - name: Display build summary
