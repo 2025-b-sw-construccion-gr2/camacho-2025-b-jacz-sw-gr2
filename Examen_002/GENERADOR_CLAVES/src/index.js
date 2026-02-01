@@ -16,7 +16,10 @@ function showMenu() {
   console.log('2. Generar contraseña personalizada');
   console.log('3. Generar múltiples contraseñas');
   console.log('4. Validar fortaleza de contraseña');
-  console.log('5. Salir\n');
+  console.log('5. Ver historial de contraseñas');
+  console.log('6. Ver estadísticas');
+  console.log('7. Limpiar historial');
+  console.log('8. Salir\n');
 }
 
 function generateSimple() {
@@ -120,11 +123,54 @@ function askContinue() {
   });
 }
 
+function showHistory() {
+  const history = generator.getHistory(10);
+
+  if (history.length === 0) {
+    console.log('\n📭 No hay contraseñas en el historial aún.');
+    askContinue();
+    return;
+  }
+
+  console.log('\n📜 Historial de Contraseñas Generadas (últimas 10):\n');
+  console.log('─'.repeat(80));
+
+  history.forEach((entry, index) => {
+    const date = new Date(entry.timestamp);
+    const timeStr = date.toLocaleTimeString();
+    console.log(`${index + 1}. ${entry.password}`);
+    console.log(`   Longitud: ${entry.length} | Fortaleza: ${entry.strength} | Hora: ${timeStr}`);
+    console.log('─'.repeat(80));
+  });
+
+  askContinue();
+}
+
+function showStats() {
+  const stats = generator.getHistoryStats();
+
+  if (stats.total === 0) {
+    console.log('\n📊 No hay estadísticas disponibles. Genera algunas contraseñas primero.');
+    askContinue();
+    return;
+  }
+
+  console.log('\n📊 Estadísticas del Historial:\n');
+  console.log(`   Total generadas: ${stats.total}`);
+  console.log(`   Longitud promedio: ${stats.averageLength} caracteres`);
+  console.log('\n   Distribución por fortaleza:');
+  console.log(`   🟢 Fuertes: ${stats.strongCount} (${Math.round(stats.strongCount/stats.total*100)}%)`);
+  console.log(`   🟡 Moderadas: ${stats.moderateCount} (${Math.round(stats.moderateCount/stats.total*100)}%)`);
+  console.log(`   🔴 Débiles: ${stats.weakCount} (${Math.round(stats.weakCount/stats.total*100)}%)`);
+
+  askContinue();
+}
+
 function main() {
   showMenu();
 
-  rl.question('Selecciona una opción (1-5): ', (option) => {
-    switch (option) {
+  rl.question('Selecciona una opción (1-8): ', (option) => {
+    switch(option) {
     case '1':
       generateSimple();
       break;
@@ -138,6 +184,17 @@ function main() {
       validatePassword();
       break;
     case '5':
+      showHistory();
+      break;
+    case '6':
+      showStats();
+      break;
+    case '7':
+      generator.clearHistory();
+      console.log('\n✅ Historial limpiado exitosamente.');
+      askContinue();
+      break;
+    case '8':
       console.log('\n👋 ¡Hasta luego! Mantén tus contraseñas seguras.\n');
       rl.close();
       break;
