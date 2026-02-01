@@ -117,8 +117,11 @@ class PasswordGenerator {
    * @returns {string} Tiempo estimado
    */
   calculateCrackTime(password) {
-    const charset = this.lowercase.length + this.uppercase.length +
-        this.numbers.length + this.symbols.length;
+    const charset =
+      this.lowercase.length +
+      this.uppercase.length +
+      this.numbers.length +
+      this.symbols.length;
     const combinations = Math.pow(charset, password.length);
 
     // Asumiendo 1 billón de intentos por segundo

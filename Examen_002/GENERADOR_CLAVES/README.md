@@ -2,8 +2,6 @@
 
 Proyecto académico para la materia de Construcción y Evolución de Software.
 
-[![CI Pipeline](https://github.com/tu-org/tu-repo/actions/workflows/ci.yml/badge.svg)](https://github.com/tu-org/tu-repo/actions/workflows/ci.yml)
-
 ## 📖 Descripción
 
 Aplicación de línea de comandos en Node.js que genera contraseñas seguras y aleatorias con diferentes opciones de personalización. Incluye validación de fortaleza de contraseñas.
@@ -15,6 +13,7 @@ Aplicación de línea de comandos en Node.js que genera contraseñas seguras y a
 - 💪 Validación de fortaleza
 - 📊 Análisis detallado de seguridad
 - 🔢 Generación múltiple de contraseñas
+- 📊 Historial temporal de contraseñas
 - ✅ Tests unitarios completos
 
 ## 🚀 Instalación y Ejecución Local
@@ -66,41 +65,42 @@ npm run format
 ## 🎮 Uso de la Aplicación
 
 Al ejecutar `npm start`, verás un menú interactivo:
-```
-╔═══════════════════════════════════════════╗
-║   🔐 GENERADOR DE CONTRASEÑAS SEGURAS   ║
-╚═══════════════════════════════════════════╝
 
-1. Generar contraseña simple
-2. Generar contraseña personalizada
-3. Generar múltiples contraseñas
-4. Validar fortaleza de contraseña
-5. Salir
-```
+![img.png](docs/img.png)
 
 ### Ejemplos de Uso
 
 **Opción 1: Contraseña Simple**
-```
-✅ Contraseña generada:
-   aB3$xY9!mK2@pL7*
 
-💪 Fortaleza: Fuerte (7/7)
-```
+![img_1.png](docs/img_1.png)
+
+**Opción 2: Contraseña Personalizada**
+
+![img_2.png](docs/img_2.png)
+
+**Opción 3: Múltiples contraseñas**
+
+![img_3.png](docs/img_3.png)
 
 **Opción 4: Validar Contraseña**
-```
-📊 Análisis de Fortaleza:
-   Nivel: Fuerte
-   Puntuación: 6/7
 
-   Características:
-   - Longitud: 14 caracteres
-   - Minúsculas: ✓
-   - Mayúsculas: ✓
-   - Números: ✓
-   - Símbolos: ✓
-```
+![img_4.png](docs/img_4.png)
+
+**Opción 5: Historial de Contraseñas**
+
+![img_5.png](docs/img_5.png)
+
+**Opción 6: Estadísticas de Contraseñas**
+
+![img_6.png](docs/img_6.png)
+
+**Opción 7: Limpiar Historial de Contraseñas**
+
+![img_7.png](docs/img_7.png)
+
+**Opción 8: Salir**
+
+![img_8.png](docs/img_8.png)
 
 ## 🔄 Pipeline de CI/CD
 
@@ -182,121 +182,14 @@ El pipeline se ejecuta automáticamente en cada `push` y `pull request` a las ra
 ## 📸 Capturas de Pantalla
 
 ### Ejecución Local Exitosa
-```bash
-$ npm start
 
-╔═══════════════════════════════════════════╗
-║   🔐 GENERADOR DE CONTRASEÑAS SEGURAS   ║
-╚═══════════════════════════════════════════╝
-
-1. Generar contraseña simple
-2. Generar contraseña personalizada
-3. Generar múltiples contraseñas
-4. Validar fortaleza de contraseña
-5. Salir
-
-Selecciona una opción (1-5): 1
-
-✅ Contraseña generada:
-   xK9@mP2$nL5!qR8*
-
-💪 Fortaleza: Fuerte (7/7)
-```
+![img.png](docs/img.png)
 
 ### Tests Pasando
-```bash
-$ npm test
 
-PASS  tests/passwordGenerator.test.js
-  PasswordGenerator
-    generate
-      ✓ debería generar una contraseña de longitud correcta (3 ms)
-      ✓ debería generar contraseña con longitud mínima de 4 (1 ms)
-      ✓ debería lanzar error si longitud es menor a 4 (2 ms)
-      ✓ debería lanzar error si longitud es mayor a 128 (1 ms)
-      ✓ debería generar contraseña solo con minúsculas (5 ms)
-      ✓ debería incluir mayúsculas cuando se especifica (4 ms)
-      ✓ debería incluir números cuando se especifica (3 ms)
-      ✓ debería incluir símbolos cuando se especifica (4 ms)
-    validateStrength
-      ✓ debería validar una contraseña fuerte correctamente (2 ms)
-      ✓ debería validar una contraseña débil correctamente (1 ms)
-      ✓ debería detectar presencia de minúsculas (1 ms)
-      ✓ debería detectar presencia de mayúsculas (1 ms)
-      ✓ debería detectar presencia de números (1 ms)
-      ✓ debería detectar presencia de símbolos (1 ms)
-      ✓ debería lanzar error con contraseña inválida (2 ms)
-    generateMultiple
-      ✓ debería generar múltiples contraseñas (5 ms)
-      ✓ debería generar contraseñas únicas (8 ms)
-      ✓ debería lanzar error si la cantidad es menor a 1 (1 ms)
-      ✓ debería lanzar error si la cantidad es mayor a 100 (1 ms)
+![img_9.png](docs/img_9.png)
 
-Test Suites: 1 passed, 1 total
-Tests:       19 passed, 19 total
-Coverage:    100%
-Time:        1.234 s
-```
-
-### GitHub Actions Pipeline
-
-![CI Pipeline Success](docs/pipeline-success.png)
-
-## 🌿 Workflow de Branches
-
-### Estrategia de Branching
-```
-main (producción)
- │
- ├── develop (integración)
- │    │
- │    ├── feature/nueva-funcionalidad
- │    ├── feature/mejora-validacion
- │    └── feature/agregar-tests
-```
-
-### Flujo de Trabajo
-
-1. **Crear feature branch desde develop:**
-```bash
-git checkout develop
-git pull origin develop
-git checkout -b feature/nombre-descriptivo
-```
-
-2. **Desarrollar y hacer commits:**
-```bash
-git add .
-git commit -m "feat: descripción del cambio"
-```
-
-3. **Push de la rama:**
-```bash
-git push origin feature/nombre-descriptivo
-```
-
-4. **Crear Pull Request:**
-    - Ir a GitHub
-    - Crear PR desde `feature/nombre` hacia `develop`
-    - Describir los cambios realizados
-    - Asignar reviewer (compañero)
-
-5. **Revisión y Aprobación:**
-    - El compañero revisa el código
-    - Hace comentarios si es necesario
-    - Aprueba el PR
-
-6. **Merge:**
-    - Una vez aprobado, hacer merge
-    - Eliminar la rama feature
-
-## 🧪 Tests Implementados
-
-### Cobertura de Tests
-
-| Módulo              | Cobertura | Tests |
-|---------------------|-----------|-------|
-| passwordGenerator.js| 100%      | 19    |
+![img_10.png](docs/img_10.png)
 
 ### Tipos de Tests
 

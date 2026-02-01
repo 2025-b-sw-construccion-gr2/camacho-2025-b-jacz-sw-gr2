@@ -139,7 +139,9 @@ function showHistory() {
     const date = new Date(entry.timestamp);
     const timeStr = date.toLocaleTimeString();
     console.log(`${index + 1}. ${entry.password}`);
-    console.log(`   Longitud: ${entry.length} | Fortaleza: ${entry.strength} | Hora: ${timeStr}`);
+    console.log(
+      `   Longitud: ${entry.length} | Fortaleza: ${entry.strength} | Hora: ${timeStr}`
+    );
     console.log('─'.repeat(80));
   });
 
@@ -150,7 +152,9 @@ function showStats() {
   const stats = generator.getHistoryStats();
 
   if (stats.total === 0) {
-    console.log('\n📊 No hay estadísticas disponibles. Genera algunas contraseñas primero.');
+    console.log(
+      '\n📊 No hay estadísticas disponibles. Genera algunas contraseñas primero.'
+    );
     askContinue();
     return;
   }
@@ -159,9 +163,15 @@ function showStats() {
   console.log(`   Total generadas: ${stats.total}`);
   console.log(`   Longitud promedio: ${stats.averageLength} caracteres`);
   console.log('\n   Distribución por fortaleza:');
-  console.log(`   🟢 Fuertes: ${stats.strongCount} (${Math.round(stats.strongCount/stats.total*100)}%)`);
-  console.log(`   🟡 Moderadas: ${stats.moderateCount} (${Math.round(stats.moderateCount/stats.total*100)}%)`);
-  console.log(`   🔴 Débiles: ${stats.weakCount} (${Math.round(stats.weakCount/stats.total*100)}%)`);
+  console.log(
+    `   🟢 Fuertes: ${stats.strongCount} (${Math.round((stats.strongCount / stats.total) * 100)}%)`
+  );
+  console.log(
+    `   🟡 Moderadas: ${stats.moderateCount} (${Math.round((stats.moderateCount / stats.total) * 100)}%)`
+  );
+  console.log(
+    `   🔴 Débiles: ${stats.weakCount} (${Math.round((stats.weakCount / stats.total) * 100)}%)`
+  );
 
   askContinue();
 }
@@ -170,37 +180,37 @@ function main() {
   showMenu();
 
   rl.question('Selecciona una opción (1-8): ', (option) => {
-    switch(option) {
-    case '1':
-      generateSimple();
-      break;
-    case '2':
-      generateCustom();
-      break;
-    case '3':
-      generateMultiple();
-      break;
-    case '4':
-      validatePassword();
-      break;
-    case '5':
-      showHistory();
-      break;
-    case '6':
-      showStats();
-      break;
-    case '7':
-      generator.clearHistory();
-      console.log('\n✅ Historial limpiado exitosamente.');
-      askContinue();
-      break;
-    case '8':
-      console.log('\n👋 ¡Hasta luego! Mantén tus contraseñas seguras.\n');
-      rl.close();
-      break;
-    default:
-      console.log('\n❌ Opción no válida');
-      askContinue();
+    switch (option) {
+      case '1':
+        generateSimple();
+        break;
+      case '2':
+        generateCustom();
+        break;
+      case '3':
+        generateMultiple();
+        break;
+      case '4':
+        validatePassword();
+        break;
+      case '5':
+        showHistory();
+        break;
+      case '6':
+        showStats();
+        break;
+      case '7':
+        generator.clearHistory();
+        console.log('\n✅ Historial limpiado exitosamente.');
+        askContinue();
+        break;
+      case '8':
+        console.log('\n👋 ¡Hasta luego! Mantén tus contraseñas seguras.\n');
+        rl.close();
+        break;
+      default:
+        console.log('\n❌ Opción no válida');
+        askContinue();
     }
   });
 }
