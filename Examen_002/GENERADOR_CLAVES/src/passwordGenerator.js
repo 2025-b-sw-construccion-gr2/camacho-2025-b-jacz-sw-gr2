@@ -106,6 +106,26 @@ class PasswordGenerator {
     }
     return passwords;
   }
+
+  /**
+   * Calcula el tiempo estimado para romper una contraseña
+   * @param {string} password - Contraseña a analizar
+   * @returns {string} Tiempo estimado
+   */
+  calculateCrackTime(password) {
+    const charset = this.lowercase.length + this.uppercase.length +
+        this.numbers.length + this.symbols.length;
+    const combinations = Math.pow(charset, password.length);
+
+    // Asumiendo 1 billón de intentos por segundo
+    const seconds = combinations / 1000000000000;
+
+    if (seconds < 60) return `${Math.round(seconds)} segundos`;
+    if (seconds < 3600) return `${Math.round(seconds / 60)} minutos`;
+    if (seconds < 86400) return `${Math.round(seconds / 3600)} horas`;
+    if (seconds < 31536000) return `${Math.round(seconds / 86400)} días`;
+    return `${Math.round(seconds / 31536000)} años`;
+  }
 }
 
 module.exports = PasswordGenerator;
