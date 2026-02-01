@@ -9,6 +9,8 @@ class PasswordGenerator {
     this.uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     this.numbers = '0123456789';
     this.symbols = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    this.history = [];
+    this.maxHistorySize = 50;
   }
 
   /**
@@ -45,6 +47,8 @@ class PasswordGenerator {
       const randomIndex = Math.floor(Math.random() * characters.length);
       password += characters[randomIndex];
     }
+
+    this.saveToHistory(password, { options });
 
     return password;
   }
@@ -125,6 +129,102 @@ class PasswordGenerator {
     if (seconds < 86400) return `${Math.round(seconds / 3600)} horas`;
     if (seconds < 31536000) return `${Math.round(seconds / 86400)} días`;
     return `${Math.round(seconds / 31536000)} años`;
+  }
+
+  /**
+   * Guarda una contraseña en el historial
+   * @param {string} password - Contraseña a guardar
+   * @param {Object} metadata - Información adicional
+   */
+  saveToHistory(password, metadata = {}) {
+    const entry = {
+      password,
+      timestamp: new Date().toISOString(),
+      length: password.length,
+      strength: this.validateStrength(password).level,
+      ...metadata
+    };
+
+    this.history.unshift(entry);
+
+    // Mantener solo las últimas 50
+    if (this.history.length > this.maxHistorySize) {
+      this.history = this.history.slice(0, this.maxHistorySize);
+    }
+  }
+
+  /**
+   * Obtiene el historial de contraseñas
+   * @param {number} limit - Número máximo de entradas a devolver
+   * @returns {Array} Historial de contraseñas
+   */
+  getHistory(limit = 10) {
+    return this.history.slice(0, limit);
+  }
+
+  /**
+   * Limpia el historial
+   */
+  clearHistory() {
+    this.history = [];
+  }
+
+  /**
+   * Obtiene estadísticas del historial
+   * @returns {Object} Estadísticas
+   */
+  getHistoryStats() {
+    if (this.history.length === 0) {
+      return {
+        total: 0,
+        averageLength: 0,
+        strongCount: 0,
+        moderateCount: 0,
+        weakCount: 0
+      };
+    }
+
+    const stats = {
+      total: this.history.length,
+      averageLength: 0,
+      strongCount: 0,
+      moderateCount: 0,
+      weakCount: 0
+    };
+
+    let totalLength = 0;
+
+    this.history.forEach((entry) => {
+      totalLength += entry.length;
+
+      if (entry.strength === 'Fuerte') stats.strongCount++;
+      else if (entry.strength === 'Moderada') stats.moderateCount++;
+      else stats.weakCount++;
+    });
+
+    stats.averageLength = Math.round(totalLength / this.history.length);
+
+    return stats;
+  }
+
+  /**
+   * Busca en el historial por criterios
+   * @param {Object} criteria - Criterios de búsqueda
+   * @returns {Array} Contraseñas que coinciden
+   */
+  searchHistory(criteria = {}) {
+    return this.history.filter((entry) => {
+      if (criteria.minLength && entry.length < criteria.minLength) {
+        return false;
+      }
+      if (criteria.maxLength && entry.length > criteria.maxLength) {
+        return false;
+      }
+      if (criteria.strength && entry.strength !== criteria.strength) {
+        return false;
+      }
+      return true;
+    });
   }
 }
 
